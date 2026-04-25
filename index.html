@@ -875,6 +875,9 @@
     scrollToQuiz();
   }
 
+  // ⚙️ Вставьте сюда вашу ссылку из Google Apps Script
+  const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwfG6xcmYEOsQlfkAK228ffKmAzNROSPhhpRDDl6LoWsvDWxGI8Qb9NlLTdoQ7HGwD5tg/exec';
+
   function submitForm() {
     const name = document.getElementById('inp-name').value.trim();
     const phone = document.getElementById('inp-phone').value.trim();
@@ -882,6 +885,25 @@
       alert('Пожалуйста, заполните имя и номер телефона');
       return;
     }
+
+    // Отправка в Google Таблицу
+    if (SHEET_URL !== 'YOUR_APPS_SCRIPT_URL') {
+      fetch(SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name,
+          phone: phone,
+          q1: answers[1] || '—',
+          q2: answers[2] || '—',
+          q3: answers[3] || '—',
+          date: new Date().toLocaleString('ru-RU'),
+          source: 'TikTok / Quiz'
+        })
+      }).catch(() => {}); // тихо если нет связи
+    }
+
     const msg = encodeURIComponent(
       `Здравствуйте! Меня зовут ${name}.\n` +
       `Телефон: ${phone}\n` +
